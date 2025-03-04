@@ -5,6 +5,13 @@
   "author": "Alex Schneider <me@schneider.ax>",
   "license": "ISC",
   "repository": "https://github.com/axtgr/babel-plugin-transform-tailwind-to-props",
+  "keywords": [
+    "babel-plugin",
+    "tailwind",
+    "tailwindcss",
+    "tamagui",
+    "classnames"
+  ],
   "packageManager": "bun@1.2.4",
   "type": "commonjs",
   "main": "src/index.cjs",

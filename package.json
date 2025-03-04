@@ -15,6 +15,12 @@
   "packageManager": "bun@1.2.4",
   "type": "commonjs",
   "main": "src/index.cjs",
+  "exports": {
+    ".": "./src/index.cjs",
+    "./tamagui": "./src/tamagui/index.cjs",
+    "./tailwind": "./src/tailwind/index.cjs",
+    "./react-native": "./src/react-native-index.cjs"
+  },
   "dependencies": {
     "outmatch": "^1.0.0",
     "synckit": "^0.9.2"

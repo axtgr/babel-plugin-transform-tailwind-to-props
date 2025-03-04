@@ -7,5 +7,12 @@
   "repository": "https://github.com/axtgr/babel-plugin-transform-tailwind-to-props",
   "packageManager": "bun@1.2.4",
   "type": "commonjs",
-  "main": "src/index.cjs"
+  "main": "src/index.cjs",
+  "dependencies": {
+    "outmatch": "^1.0.0",
+    "synckit": "^0.9.2"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
 }

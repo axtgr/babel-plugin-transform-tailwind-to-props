@@ -1,0 +1,11 @@
+{
+  "name": "babel-plugin-transform-tailwind-to-props",
+  "version": "0.1.0",
+  "description": "",
+  "author": "Alex Schneider <me@schneider.ax>",
+  "license": "ISC",
+  "repository": "https://github.com/axtgr/babel-plugin-transform-tailwind-to-props",
+  "packageManager": "bun@1.2.4",
+  "type": "commonjs",
+  "main": "src/index.cjs"
+}

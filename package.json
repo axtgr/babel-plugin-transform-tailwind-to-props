@@ -12,6 +12,7 @@
     "tamagui",
     "classnames"
   ],
+  "private": true,
   "packageManager": "bun@1.2.4",
   "type": "commonjs",
   "main": "src/index.cjs",

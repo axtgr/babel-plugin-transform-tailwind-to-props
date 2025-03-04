@@ -172,7 +172,20 @@ function parseTokensFromAttribute(attribute) {
   }
 }
 
-function transformClassNamesPlugin(options = {}) {
+/**
+ * Babel plugin that transforms Tailwind-like class names into React props.
+ *
+ * @param {Object} options - Configuration options for the plugin
+ * @param {boolean} [options.debug=false] - Whether to output debug information during transformation
+ * @param {string} [options.attribute="className"] - The JSX attribute that contains the class names to transform
+ * @param {Record<string, (values: unknown[]) => Record<string, unknown>>} [options.mappings={}] - Mappings of class names to prop transformations
+ * @param {Record<string, string>} [options.placeholders={}] - Patterns for dynamic placeholders in class names
+ * @param {Record<string, string | boolean>} [options.modifiers={}] - Configuration for handling modifiers like hover, focus, etc.
+ * @param {string} [options.modifierSeparator=":"] - Character used to separate modifiers from class and attribute names
+ * @param {string | string[]} [options.include] - Glob patterns for files to include
+ * @returns {{ name: 'transform-tailwind-to-props', visitor: any }} A Babel plugin object with a visitor for JSXElement nodes
+ */
+function transformTailwindToPropsPlugin(options = {}) {
   const {
     attribute: targetAttributeName = 'className',
     mappings = {},
@@ -180,14 +193,14 @@ function transformClassNamesPlugin(options = {}) {
     modifiers = {},
     modifierSeparator = ':',
     debug = false,
-    include = ['./{app,src}/**/*.{js,ts,jsx,tsx}'],
+    include = './{app,src}/**/*.{js,ts,jsx,tsx}',
   } = options
   const projectRoot = process.cwd()
   const isMatchingPath = outmatch(include)
   const compiledKeys = compileKeys(mappings, placeholders)
 
   return {
-    name: 'transform-classnames-plugin',
+    name: 'transform-tailwind-to-props',
     visitor: {
       JSXElement(path, state) {
         // Globs in the include option are relative to the project root and can optionally
@@ -287,4 +300,4 @@ function transformClassNamesPlugin(options = {}) {
   }
 }
 
-module.exports = transformClassNamesPlugin
+module.exports = transformTailwindToPropsPlugin

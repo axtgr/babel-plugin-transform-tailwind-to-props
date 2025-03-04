@@ -1,12 +1,12 @@
-const transformClassNamesPlugin = require('../index.cjs')
+const plugin = require('../index.cjs')
 const { getOptionsForTailwindConfig } = require('../common.cjs')
 const mappings = require('./mappings.cjs')
 const placeholders = require('./placeholders.cjs')
 const modifiers = require('./modifiers.cjs')
 
-function transformClassNamesPluginTailwind(_api, options = {}) {
+function transformTailwindToPropsPluginTailwind(_api, options = {}) {
   const optionsFromTwConfig = getOptionsForTailwindConfig(options.tailwindConfig, true)
-  return transformClassNamesPlugin({
+  return plugin({
     attribute: 'tw',
     ...optionsFromTwConfig,
     ...options,
@@ -28,4 +28,4 @@ function transformClassNamesPluginTailwind(_api, options = {}) {
   })
 }
 
-module.exports = transformClassNamesPluginTailwind
+module.exports = transformTailwindToPropsPluginTailwind

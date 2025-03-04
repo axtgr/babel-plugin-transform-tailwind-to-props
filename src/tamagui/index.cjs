@@ -1,13 +1,13 @@
-const transformClassNamesPlugin = require('../index.cjs')
+const plugin = require('../index.cjs')
 const { getOptionsForTailwindConfig } = require('../common.cjs')
 const mappings = require('./mappings.cjs')
 const placeholders = require('./placeholders.cjs')
 const modifiers = require('./modifiers.cjs')
 const { createTailwindPreset } = require('./preset.cjs')
 
-function transformClassNamesPluginTamagui(_api, options = {}) {
+function transformTailwindToPropsPluginTamagui(_api, options = {}) {
   const optionsFromTwConfig = getOptionsForTailwindConfig(options.tailwindConfig, false)
-  return transformClassNamesPlugin({
+  return plugin({
     attribute: 'c',
     ...optionsFromTwConfig,
     ...options,
@@ -29,5 +29,5 @@ function transformClassNamesPluginTamagui(_api, options = {}) {
   })
 }
 
-module.exports = transformClassNamesPluginTamagui
+module.exports = transformTailwindToPropsPluginTamagui
 module.exports.createTailwindPreset = createTailwindPreset

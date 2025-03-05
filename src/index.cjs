@@ -4,6 +4,75 @@ const generate = require('@babel/generator').default
 const outmatch = require('outmatch')
 const { escapeRegExp } = require('./common.cjs')
 
+function getModifiersStringForRegExp(modifiers) {
+  return Object.keys(modifiers)
+    .map((key) => escapeRegExp(key))
+    .sort((a, b) => b.length - a.length)
+    .join('|')
+}
+
+function createAttributeParser(targetAttributeName, modifiers, modifierSeparator) {
+  const modifierKeysString = getModifiersStringForRegExp(modifiers)
+
+  if (modifierKeysString.length === 0) {
+    return function parseAttribute(fullAttributeName) {
+      return fullAttributeName === targetAttributeName ? [] : undefined
+    }
+  }
+
+  targetAttributeName = escapeRegExp(targetAttributeName)
+  modifierSeparator = escapeRegExp(modifierSeparator)
+
+  const attributeWithModifiersRegExp = new RegExp(
+    `^${targetAttributeName}((?:${modifierSeparator}(?:${modifierKeysString}))*)$`,
+  )
+  const modifierExtractorRegExp = new RegExp(`${modifierSeparator}(${modifierKeysString})`, 'g')
+
+  return function parseAttribute(fullAttributeName) {
+    const match = fullAttributeName.match(attributeWithModifiersRegExp)
+    if (!match) return undefined
+    const modifiers = []
+    if (match[1]) {
+      const modifierMatches = match[1].matchAll(modifierExtractorRegExp)
+      for (const modifierMatch of modifierMatches) {
+        modifiers.push(modifierMatch[1])
+      }
+    }
+    return modifiers
+  }
+}
+
+function createTokenParser(modifiers, modifierSeparator) {
+  const modifierKeysString = getModifiersStringForRegExp(modifiers)
+
+  if (modifierKeysString.length === 0) {
+    return function parseToken(fullToken) {
+      return { token: fullToken, modifiers: [] }
+    }
+  }
+
+  modifierSeparator = escapeRegExp(modifierSeparator)
+
+  const tokenWithModifiersRegExp = new RegExp(
+    `^((?:(?:${modifierKeysString})${modifierSeparator})*)(.+)$`,
+  )
+  const modifierExtractorRegExp = new RegExp(`(${modifierKeysString})${modifierSeparator}`, 'g')
+
+  return function parseToken(fullToken) {
+    const match = fullToken.match(tokenWithModifiersRegExp)
+    if (!match) return undefined
+    const token = match[2]
+    const modifiers = []
+    if (match[1]) {
+      const modifierMatches = match[1].matchAll(modifierExtractorRegExp)
+      for (const modifierMatch of modifierMatches) {
+        modifiers.push(modifierMatch[1])
+      }
+    }
+    return { token, modifiers }
+  }
+}
+
 function compileKeys(mappings, placeholders) {
   // Static keys are keys without placeholders, e.g. `self-center`.
   // They are checked first via fast Map lookups.
@@ -62,12 +131,6 @@ function matchToken(token, { staticKeys, dynamicKeys }) {
       return { key, captures, handler }
     }
   }
-}
-
-function parseTokenWithModifiers(tokenWithModifiers, modifierSeparator) {
-  const modifiers = tokenWithModifiers.split(modifierSeparator)
-  const token = modifiers.pop()
-  return { token, modifiers }
 }
 
 function createAttributeNode(name, value) {
@@ -198,6 +261,8 @@ function transformTailwindToPropsPlugin(options = {}) {
   const projectRoot = process.cwd()
   const isMatchingPath = outmatch(include)
   const compiledKeys = compileKeys(mappings, placeholders)
+  const parseAttribute = createAttributeParser(targetAttributeName, modifiers, modifierSeparator)
+  const parseToken = createTokenParser(modifiers, modifierSeparator)
 
   return {
     name: 'transform-tailwind-to-props',
@@ -222,18 +287,15 @@ function transformTailwindToPropsPlugin(options = {}) {
           if (attribute.type !== 'JSXAttribute') return
 
           const fullAttributeName = getAttributeName(attribute)
-          const [attributeName, ...attributeModifiers] = fullAttributeName.split(modifierSeparator)
+          const attributeModifiers = parseAttribute(fullAttributeName)
 
-          if (attributeName !== targetAttributeName) return
+          if (!attributeModifiers) return
 
           const newAttributes = []
           const rawTokens = parseTokensFromAttribute(attribute)
 
           rawTokens.forEach((rawToken) => {
-            const { token, modifiers: tokenModifiers } = parseTokenWithModifiers(
-              rawToken,
-              modifierSeparator,
-            )
+            const { token, modifiers: tokenModifiers } = parseToken(rawToken)
             const match = matchToken(token, compiledKeys)
 
             if (!match) return

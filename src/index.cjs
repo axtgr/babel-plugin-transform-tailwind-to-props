@@ -60,7 +60,7 @@ function createTokenParser(modifiers, modifierSeparator) {
 
   return function parseToken(fullToken) {
     const match = fullToken.match(tokenWithModifiersRegExp)
-    if (!match) return undefined
+    if (!match) return { token: undefined, modifiers: [] }
     const token = match[2]
     const modifiers = []
     if (match[1]) {
@@ -296,8 +296,9 @@ function transformTailwindToPropsPlugin(options = {}) {
 
           rawTokens.forEach((rawToken) => {
             const { token, modifiers: tokenModifiers } = parseToken(rawToken)
-            const match = matchToken(token, compiledKeys)
+            if (!token) return
 
+            const match = matchToken(token, compiledKeys)
             if (!match) return
 
             const newProps = match.handler(match.captures)

@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-transform-tailwind-to-props",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Transform Tailwind-like classes to JSX props and objects",
   "author": "Alex Schneider <me@schneider.ax>",
   "license": "ISC",

@@ -349,7 +349,7 @@ function transformTailwindToPropsPlugin(options = {}) {
         })
 
         if (debug && hasBeenModified) {
-          console.log(`[transform-classnames] ${relativePath}`)
+          console.log(`[transform-tailwind-to-props] ${relativePath}`)
           const _attributes = openingElement.attributes
           openingElement.attributes = _attributes.filter(
             (a) => !['__self', '__source'].includes(a.name?.name),

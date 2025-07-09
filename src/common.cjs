@@ -83,7 +83,7 @@ function tailwindCssToMappings(css, includeVariables = false) {
         break
       }
       const normalizedKey = kebabToCamelCase(key.trim())
-      const normalizedValue = Number.isNaN(Number(value)) ? `'${value}'` : Number(value)
+      const normalizedValue = Number.isNaN(Number(value)) ? `'${value}'` : String(value)
       propertyMap[normalizedKey] = normalizedValue
     }
 

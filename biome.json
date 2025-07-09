@@ -1,24 +1,35 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": {
-    "enabled": true
+  "$schema": "https://biomejs.dev/schemas/2.1.1/schema.json",
+  "files": {
+    "includes": ["**", "!**/generated.*"]
   },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
       "suspicious": {
         "noExplicitAny": "off",
-        "noCatchAssign": "off"
+        "noCatchAssign": "off",
+        "noConfusingVoidType": "off"
       },
       "style": {
         "noUselessElse": "off",
         "noNonNullAssertion": "off",
         "noParameterAssign": "off",
-        "useNumberNamespace": "off"
+        "useNumberNamespace": "off",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "noInferrableTypes": "error"
       },
       "complexity": {
-        "noForEach": "off"
+        "noForEach": "off",
+        "noThisInStatic": "off",
+        "useLiteralKeys": "off"
       },
       "a11y": {
         "useValidAriaRole": "off",
@@ -42,7 +53,7 @@
   },
   "overrides": [
     {
-      "include": ["package.json"],
+      "includes": ["**/package.json"],
       "json": {
         "parser": {
           "allowComments": true,

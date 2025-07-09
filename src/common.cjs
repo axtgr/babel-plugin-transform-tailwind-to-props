@@ -25,7 +25,7 @@ function resolveConfigPath(customPath) {
       const resolvedPath = Path.resolve(path)
       fs.accessSync(resolvedPath)
       return resolvedPath
-    } catch (err) {}
+    } catch (_e) {}
   }
 }
 
@@ -63,7 +63,7 @@ function tailwindCssToMappings(css, includeVariables = false) {
   const mappings = {}
   let matches
 
-  // biome-ignore lint/suspicious/noAssignInExpressions:
+  // biome-ignore lint/suspicious/noAssignInExpressions: -
   while ((matches = classAndPropertiesRegExp.exec(css)) !== null) {
     const className = matches[1]?.trim()
     const properties = matches[2]?.trim()

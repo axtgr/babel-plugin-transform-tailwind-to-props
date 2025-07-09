@@ -273,7 +273,7 @@ function transformTailwindToPropsPlugin(options = {}) {
         // non-prefixed cases.
         const relativePath = nodePath
           .relative(projectRoot, state.file.opts.filename)
-          .replace(/^\.+[\/\\]+/g, '')
+          .replace(/^\.+[/\\]+/g, '')
 
         if (!isMatchingPath(relativePath) && !isMatchingPath(`./${relativePath}`)) {
           return
